@@ -92,23 +92,23 @@ export default command(
                 if (hookExists) {
                     // If the symlink is broken, it will throw an error
                     // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    const realpath = await fs.realpath(absoltueSymlinkPath).catch(() => {});
+                    const realpath = await fs.realpath(absoluteSymlinkPath).catch(() => {});
                     if (realpath === hookPath) {
-                        console.warn('The hook is already installed');
+                        console.warn('The hook is already installed at "${absoluteSymlinkPath}');
                         return;
                     }
                     throw new KnownError(
-                        `A different ${hookName} hook seems to be installed. Please remove it before installing aicommit2.`
+                        `A different ${hookName} hook seems to be installed at "${absoluteSymlinkPath}". Please remove it before installing aicommit2.`
                     );
                 }
 
-                await fs.mkdir(path.dirname(absoltueSymlinkPath), { recursive: true });
+                await fs.mkdir(path.dirname(absoluteSymlinkPath), { recursive: true });
 
                 if (isWindows) {
-                    await fs.writeFile(absoltueSymlinkPath, windowsHook);
+                    await fs.writeFile(absoluteSymlinkPath, windowsHook);
                 } else {
-                    await fs.symlink(hookPath, absoltueSymlinkPath, 'file');
-                    await fs.chmod(absoltueSymlinkPath, 0o755);
+                    await fs.symlink(hookPath, absoluteSymlinkPath, 'file');
+                    await fs.chmod(absoluteSymlinkPath, 0o755);
                 }
                 console.log(`${chalk.green('✔')} Hook installed`);
                 return;
@@ -121,20 +121,20 @@ export default command(
                 }
 
                 if (isWindows) {
-                    const scriptContent = await fs.readFile(absoltueSymlinkPath, 'utf8');
+                    const scriptContent = await fs.readFile(absoluteSymlinkPath, 'utf8');
                     if (scriptContent !== windowsHook) {
                         console.warn('Hook is not installed');
                         return;
                     }
                 } else {
-                    const realpath = await fs.realpath(absoltueSymlinkPath);
+                    const realpath = await fs.realpath(absoluteSymlinkPath);
                     if (realpath !== hookPath) {
                         console.warn('Hook is not installed');
                         return;
                     }
                 }
 
-                await fs.rm(absoltueSymlinkPath);
+                await fs.rm(absoluteSymlinkPath);
                 console.log(`${chalk.green('✔')} Hook uninstalled`);
                 return;
             }

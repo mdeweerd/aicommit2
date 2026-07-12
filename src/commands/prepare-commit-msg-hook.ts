@@ -31,7 +31,7 @@ export default (
         }
 
         // If a commit message is passed in, ignore
-        if (commitSource) {
+        if (commitSource && commitSource !== 'template') {
             console.log(`Skipping aicommit2 message generation for ${commitSource} commit`);
             return;
         }
